@@ -1,0 +1,2 @@
+replicaset_desired{name="nginx", image="nginx:latest"} 0
+pod_desired{name="nginx-rqrgm", image="nginx:latest", replicaset="nginx"} 1

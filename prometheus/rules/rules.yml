@@ -1,0 +1,45 @@
+groups:
+- name: pod
+  rules:
+  - alert: PodNotRunning
+    expr: pod_desired unless on(name, image) pod_actual
+    for: 2s
+    labels:
+      resource: pod
+  - alert: PodRunningButShouldnt
+    expr: pod_actual unless on(name, image) pod_desired
+    for: 2s
+    labels:
+      resource: pod
+- name: replicaset
+  rules:
+  - alert: ReplicasetUnderSatisfied
+    expr: label_replace(sum(
+                label_replace(replicaset_desired, "replicaset_name", "$1", "name", "(.*)")
+            ) by (replicaset_name, image)
+            -
+            (
+                count(
+                    label_replace(pod_desired, "replicaset_name", "$1", "replicaset", "(.*)")
+                ) by (replicaset_name, image)
+                or on(replicaset_name, image)
+                sum(
+                    label_replace(replicaset_desired, "replicaset_name", "$1", "name", "(.*)")
+                ) by (replicaset_name, image) * 0)
+            > 0, "name", "$1", "replicaset_name", "(.*)")
+    for: 2s
+    labels:
+      resource: replicaset
+  - alert: ReplicasetOverSatisfied
+    expr: label_replace(count(
+                label_replace(pod_desired, "replicaset_name", "$1", "replicaset", "(.*)")
+            ) by (replicaset_name, image)
+            -
+            sum(
+                label_replace(replicaset_desired, "replicaset_name", "$1", "name", "(.*)")
+            ) by (replicaset_name, image)
+            > 0, "name", "$1", "replicaset_name", "(.*)"
+        )
+    for: 2s
+    labels:
+      resource: replicaset

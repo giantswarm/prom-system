@@ -1,0 +1,24 @@
+global:
+  scrape_interval: 1s
+  evaluation_interval: 1s
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets:
+      - localhost:9093
+
+rule_files:
+  - ./rules/rules.yml
+
+scrape_configs:
+  # - job_name: 'node_exporter'
+  #   static_configs:
+  #   - targets: ['localhost:9100']
+
+  - job_name: 'service'
+    static_configs:
+    - targets: ['localhost:8011']
+
+  - job_name: 'pod_controller'
+    static_configs:
+    - targets: ['localhost:8000']

@@ -1,0 +1,76 @@
+service ContainerService {
+    rpc CreateContainer (CreateContainerRequest) returns (CreateContainerResponse) {}
+    rpc DeleteContainer (DeleteContainerRequest) returns (DeleteContainerResponse) {}
+    rpc ListContainers (ListContainersRequest) returns (ListContainersResponse) {}
+}
+
+message CreateContainerRequest {
+    required Container container = 1;
+}
+
+message CreateContainerResponse {
+}
+
+message DeleteContainerRequest {
+    required Container container = 1;
+}
+
+message DeleteContainerResponse {
+}
+
+message ListContainersRequest {
+}
+
+message ListContainersResponse {
+    repeated Container containers = 1;
+}
+
+message Container {
+    optional string id = 1;
+    required string name = 2;
+    required string image = 3;
+    optional string replicaset = 4;
+}
+
+service ReplicasetService {
+    rpc CreateReplicaset (CreateReplicasetRequest) returns (CreateReplicasetResponse) {}
+    rpc DeleteReplicaset (DeleteReplicasetRequest) returns (DeleteReplicasetResponse) {}
+    rpc ListReplicasets (ListReplicasetsRequest) returns (ListReplicasetsResponse) {}
+    rpc ScaleReplicaset (ScaleReplicasetRequest) returns (ScaleReplicasetResponse) {}
+}
+
+message CreateReplicasetRequest {
+    required Replicaset replicaset = 1;
+}
+
+message CreateReplicasetResponse {
+}
+
+message DeleteReplicasetRequest {
+    required Replicaset replicaset = 1;
+}
+
+message DeleteReplicasetResponse {
+}
+
+message ListReplicasetsRequest {
+}
+
+message ListReplicasetsResponse {
+    repeated Replicaset Replicasets = 1;
+}
+
+message ScaleReplicasetRequest {
+    required Replicaset Replicaset = 1;
+    required int32 newReplicas = 2;
+}
+
+message ScaleReplicasetResponse {
+}
+
+message Replicaset {
+    required string name = 1;
+    required string image = 2;
+    required int32 replicas = 3;
+    optional int32 pods = 4;
+}
